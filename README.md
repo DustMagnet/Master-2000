@@ -10,6 +10,16 @@ Download the complete ZIP from this repository's Releases page, extract it, and 
 
 Current package: Master-2000 v0.3.3, build 4 (0.3.3.4), and Mono-78 v1.1a. The developer reports successful standalone operation on a Windows computer without supporting files. This is a reported deployment test, not certification across all Windows installations.
 
+## Screenshots
+
+A completed five-source restoration in Master-2000 v0.3.3. The analysis view provides access to the result, decision map and aligned waveform inspection.
+
+![Completed restoration and analysis view](docs/images/restoration-complete.jpg)
+
+A close-up of one selected repair. The Master is at the top and Result at the bottom. In this example, Source 2 supplies the replacement core and Sources 1, 4 and 5 support the decision. Coloured overlays identify the replaced Master interval, donor core, transitions and supporting sources. Listening and source verification remain necessary when assessing a repair.
+
+![Aligned Master, donors and Result around a verified repair](docs/images/verified-repair.jpg)
+
 ## Workflow
 
 1. Preserve each original recording and document its source and recording speed.
