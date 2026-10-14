@@ -47,7 +47,7 @@ Native regression checks and developer listening tests support this release. Ind
 
 ## Build and documentation
 
-Source projects and build instructions are under `Source/`. Master-2000 retains the internal Vinyl2000 project names. Documentation is under `docs/`; the current Swedish technical report is version 0.6. An updated English report is pending.
+Source projects and build instructions are under `Source/`. Master-2000 retains the internal Vinyl2000 project names. Documentation is under `docs/`; the technical reports are version 0.6 in [English](docs/Master-2000_Technical_Report_v0.6_EN.docx) and [Swedish](docs/Master-2000_Teknisk_rapport_v0.6_SV.docx). Both include the reported standalone deployment test.
 
 ## Feedback
 
