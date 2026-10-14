@@ -1,0 +1,46 @@
+Channel mode checks passed
+PASS channel_mode_test
+Consensus checks passed
+PASS consensus_test
+synthetic accepted 1 first 47688 last 48312
+PASS dropout, healthy Master, missing control, one witness, common silence, opposite control, unequal levels
+PASS dropout_test
+EDGE_SYNC_STOP direction -1 frame 1500 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction -1 frame 2700 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction 1 frame 9299 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+PASS: measured bidirectional edges, silence stop, one witness and disagreement rejection
+PASS edge_sync_test
+local review: independent witnesses, unequal levels, invalid copy, shared transient and insufficient support passed
+PASS local_review_test
+gain only: no penalty, invariant quality
+muffled position 0: 11/11 penalty=30 0/0 penalty=0 0/0 penalty=0 
+muffled position 1: 0/0 penalty=0 11/11 penalty=30 0/0 penalty=0 
+muffled position 2: 0/0 penalty=0 0/0 penalty=0 11/11 penalty=30 
+sync-aware Master preflight and affine speed model passed
+silence and unrelated noise guards passed
+PASS master_selection_test
+PASS: level-matched adaptive 3-6 source consensus, split vote and abstention
+PASS n_source_consensus_test
+PASS: final output clipping/DC/non-finite/seam QA
+PASS output_qa_test
+PASS: phase resets, measurable counts and identical audio with telemetry enabled
+PASS presentation_test
+PASS: adjacent B absorption, boundary guard and sub-ms core
+PASS repair_window_test
+PASS: largest compatible cluster and 4+1 donor/reserve roles
+PASS source_cluster_test
+PASS: smooth seam reversal, insufficient witnesses and two-sided local admission
+PASS splice_shape_test
+Timing helper: shift signs, gain/DC, silence, trajectory-prior phase, periodic ambiguity, all-donor backward witness gate and unsafe-prefix block passed
+PASS timing_test
+PASS: trend donor logic, level-ratio control, backward-zero bracket, onset veto/affine lock and discontinuity rejection
+PASS trend_test
+
+Final edge checks after zero-anchor gate and ambiguity test:
+EDGE_SYNC_STOP direction -1 frame 1500 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction -1 frame 1500 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction -1 frame 2700 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction 1 frame 9299 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction -1 frame 2700 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+EDGE_SYNC_STOP direction 1 frame 9299 reason INSUFFICIENT_TWO_DONOR_SUPPORT
+PASS: measured bidirectional edges, silence stop, one witness and disagreement rejection

@@ -1,0 +1,64 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <RootNamespace>Vinyl2000.App</RootNamespace>
+    <AssemblyName>Master-2000</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <SelfContained>true</SelfContained>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <PublishTrimmed>false</PublishTrimmed>
+    <PublishSingleFile>true</PublishSingleFile>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>0.3.3.4</Version>
+    <AssemblyVersion>0.3.3.4</AssemblyVersion>
+    <FileVersion>0.3.3.4</FileVersion>
+    <Product>Master-2000</Product>
+    <Copyright>Copyright © 2000–2026 Olaf Hallberg</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <PublishReadyToRun>false</PublishReadyToRun>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.3.1" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vinyl2000.Engine\Vinyl2000.Engine.vcxproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <!-- Normal Visual Studio Build: keep the native engine next to the GUI. -->
+  <Target Name="CopyNativeEngine" AfterTargets="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)\..\bin\$(Configuration)\Master2000Engine.exe"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- PublishSingleFile: add the native C++ engine to the single-file bundle.
+       WinUI extracts the bundle to a temporary directory at launch, so the GUI can
+       start Master2000Engine.exe from AppContext.BaseDirectory exactly as before. -->
+  <Target Name="IncludeNativeEngineInPublish" BeforeTargets="PrepareForPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(MSBuildProjectDirectory)\..\bin\$(Configuration)\Master2000Engine.exe">
+        <RelativePath>Master2000Engine.exe</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        <ExcludeFromSingleFile>false</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+</Project>

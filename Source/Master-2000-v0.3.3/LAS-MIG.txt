@@ -1,0 +1,17 @@
+Master-2000 v0.3.3 — releasekällkod
+
+Bygg med BUILD-PORTABLE.cmd som tidigare. Interna projekt heter Vinyl2000.
+Programtitel och versionsbricka visar nu v0.3.3; den gula testraden är borta.
+Sources-hjälptext ligger i egen rad och radbryts inom panelen.
+
+Versionsmetadata 0.3.3.4 skiljer bygget från testbygget 0.3.3.2.
+Startblankning, scrollfix, laddningsinstruktioner och ljudmotor är kvar.
+Ingen ljudalgoritm har ändrats från godkänd v0.3.3b.
+
+Kontrollera titel och Sources-text samt zoom/sidoförflyttning efter bygget.
+Skicka den nya Master-2000.exe som ZIP för uppdatering av releasepaketet.
+Nuvarande distributionspaket innehåller fortfarande testmärkt EXE.
+Hemmatest utan Visual Studio återstår före publicering.
+
+Byggfix: range-kontrollerad delay-konvertering samt constexpr NaN.
+Kantföljningstest passerade lokalt; MSVC-varningsfrihet verifieras vid nytt bygge.

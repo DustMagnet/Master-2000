@@ -1,0 +1,3 @@
+AudioCore.h unchanged from v1.1/v1.0; previously passed native audio checks.
+Win32 interface strings translated to English; macro definitions guarded.
+Project XML and source checked statically. Windows build/runtime test pending.

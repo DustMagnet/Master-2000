@@ -1,0 +1,167 @@
+<Window x:Class="Vinyl2000.App.MainWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Master-2000 v0.3.3">
+ <Grid Background="#F4F6F8">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <Border Grid.Row="0" Padding="24,20,24,16">
+   <StackPanel><StackPanel Orientation="Horizontal" Spacing="12"><TextBlock Text="MASTER-2000" FontSize="30" FontWeight="SemiBold"/><Border Padding="9,4" CornerRadius="10" Background="#E2E8F0" VerticalAlignment="Center"><TextBlock Text="v0.3.3" FontSize="12" FontWeight="SemiBold" Foreground="#334155"/></Border></StackPanel><TextBlock x:Name="ReleaseStatusText" Visibility="Collapsed" Text="" FontSize="12" Foreground="#805500" Margin="0,6,0,4"/><TextBlock Text="Multi-source archival audio reconstruction" Opacity="0.72" FontSize="14"/><TextBlock Text="Compare copies. Inspect repairs. Listen to the difference." Margin="0,5,0,0" Opacity="0.55" FontStyle="Italic"/></StackPanel>
+  </Border>
+  <Grid Grid.Row="1" Padding="24,0,24,12">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="430"/><ColumnDefinition Width="18"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+   <Border Grid.Column="0" CornerRadius="12" Padding="18" Background="#FFFFFF">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled" HorizontalScrollBarVisibility="Disabled"><Grid Margin="0,0,20,0" Background="#FFFFFF" MinHeight="600"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+     <Grid ColumnSpacing="12" RowSpacing="6">
+      <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBlock Text="Sources" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+      <Button Grid.Column="1" Content="+ Add audio" Click="AddSources_Click" VerticalAlignment="Center"/>
+      <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Name="SourceCountText" Text="Add three to six different copies of the same pressing" TextWrapping="Wrap" Opacity="0.65"/>
+     </Grid>
+     <Border Grid.Row="1" MinHeight="280" Margin="0,14" BorderThickness="1" CornerRadius="8" BorderBrush="#C7CDD4" AllowDrop="True" DragOver="DropArea_DragOver" Drop="DropArea_Drop">
+      <Grid>
+       <ListView x:Name="SourcesList" SelectionMode="Single"><ListView.ItemTemplate><DataTemplate><Grid Padding="3,7"><Grid.ColumnDefinitions><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><Border Width="26" Height="26" CornerRadius="13" VerticalAlignment="Center" Background="#DCEBFA"><TextBlock Text="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="SemiBold"/></Border><StackPanel Grid.Column="1"><TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="SemiBold"/><TextBlock Text="{Binding Details}" TextTrimming="CharacterEllipsis" Opacity="0.62" FontSize="12"/></StackPanel></Grid></DataTemplate></ListView.ItemTemplate></ListView>
+       <StackPanel x:Name="DropHint" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6" IsHitTestVisible="False"><FontIcon Glyph="&#xE8E5;" FontSize="34" Opacity="0.45"/><TextBlock Text="Drop lossless audio files here" Opacity="0.65"/></StackPanel>
+      </Grid>
+     </Border>
+     <StackPanel Grid.Row="2" Spacing="8">
+      <StackPanel Orientation="Horizontal" Spacing="8"><TextBlock Text="Audio master:" VerticalAlignment="Center" FontWeight="SemiBold"/><ComboBox x:Name="MasterMode" Width="250" SelectedIndex="0"><ComboBoxItem Content="Auto — best supported"/><ComboBoxItem Content="Source 1"/><ComboBoxItem Content="Source 2"/><ComboBoxItem Content="Source 3"/><ComboBoxItem Content="Source 4"/><ComboBoxItem Content="Source 5"/><ComboBoxItem Content="Source 6"/></ComboBox></StackPanel>
+      <ToggleSwitch x:Name="ChannelModeToggle" Header="Recording mode" IsOn="False" OnContent="Stereo — preserve left / right" OffContent="Mono — fuse groove channels"/>
+      <TextBlock Text="Choose before processing. Mono: mono records captured in stereo. Stereo: preserve both recorded channels." FontSize="12" TextWrapping="Wrap" Opacity="0.7"/>
+      <TextBlock Text="The selected audio master is also the time reference and remains unchanged except inside independently confirmed click repairs." FontSize="11" Opacity="0.58" TextWrapping="Wrap"/>
+      <TextBlock x:Name="InventoryText" Text="Input format: —" FontSize="12" TextWrapping="Wrap" Opacity="0.72"/>
+      <TextBlock x:Name="QualityText" Text="" FontSize="12" TextWrapping="Wrap" Foreground="#7A4E00"/>
+      <StackPanel Orientation="Horizontal" Spacing="8"><Button Content="Remove / exclude" Click="RemoveSource_Click" ToolTipService.ToolTip="Removes this copy completely; it cannot become Master, donor or witness."/><Button Content="Clear" Click="ClearSources_Click"/><Button x:Name="ForensicButton" Content="Forensic check" Click="Forensic_Click"/></StackPanel>
+      <Expander Header="Listen to sources" IsExpanded="True">
+       <StackPanel Spacing="8">
+        <TextBlock Text="Select a source in the list above. Any other mouse/key action stops playback." TextWrapping="Wrap" FontSize="12"/>
+        <StackPanel Orientation="Horizontal" Spacing="6"><Button Content="Whole file" Click="PlayWhole_Click"/><Button Content="10 s at cursor" Click="PlayCursor_Click"/><Button Content="Stop" Click="StopAudio_Click"/></StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="6"><NumberBox x:Name="ListenStart" Header="From (source seconds)" Value="0" Minimum="0" Width="150"/><NumberBox x:Name="ListenEnd" Header="To" Value="10" Minimum="0" Width="100"/></StackPanel>
+        <Button Content="Play interval" Click="PlayRange_Click"/>
+        <TextBlock x:Name="ListenStatus" Text="Stopped" TextWrapping="Wrap" FontSize="12"/>
+       </StackPanel>
+      </Expander>
+      <Expander Header="Record metadata &amp; rights">
+       <StackPanel Spacing="6" Padding="0,6,0,0">
+        <Grid ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+         <TextBox x:Name="LabelBox" Header="Label / company" PlaceholderText="e.g. Decca"/>
+         <TextBox x:Name="CatalogBox" Grid.Column="1" Header="Catalogue no." PlaceholderText="e.g. F.9235"/>
+        </Grid>
+        <Grid ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+         <TextBox x:Name="ArtistBox" Header="Artist" PlaceholderText="Artist / orchestra"/>
+         <TextBox x:Name="TitleBox" Grid.Column="1" Header="Title / melody" PlaceholderText="Track title"/>
+        </Grid>
+        <Grid ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+         <TextBox x:Name="SideBox" Header="Side" PlaceholderText="A / B"/>
+         <TextBox x:Name="MatrixBox" Grid.Column="1" Header="Matrix / runout" PlaceholderText="If known"/>
+        </Grid>
+        <Grid ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+         <TextBox x:Name="ReleaseYearBox" Header="Release year" PlaceholderText="e.g. 1949"/>
+         <TextBox x:Name="RecordingYearBox" Grid.Column="1" Header="Recording year" PlaceholderText="If known"/>
+        </Grid>
+        <TextBox x:Name="CountryBox" Header="Country / market" PlaceholderText="e.g. UK"/>
+        <CheckBox x:Name="KeepFileSpeed" Content="Behåll filens hastighet" IsChecked="True" Checked="KeepFileSpeed_Changed" Unchecked="KeepFileSpeed_Changed"/>
+        <Grid ColumnSpacing="8"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+         <ComboBox x:Name="RecordedRpm" IsEnabled="False" Header="File current RPM" SelectedIndex="2"><ComboBoxItem Content="33⅓"/><ComboBoxItem Content="45"/><ComboBoxItem Content="78"/><ComboBoxItem Content="77.92 — Europe"/><ComboBoxItem Content="78.26 — USA"/><ComboBoxItem Content="Other / unknown"/></ComboBox>
+         <ComboBox x:Name="DiscRpm" IsEnabled="False" Grid.Column="1" Header="Target RPM" SelectedIndex="2"><ComboBoxItem Content="33⅓"/><ComboBoxItem Content="45"/><ComboBoxItem Content="77.92 — Europe"/><ComboBoxItem Content="78.26 — USA"/><ComboBoxItem Content="78.00 — Unknown standard"/><ComboBoxItem Content="Other / unknown"/></ComboBox>
+        </Grid>
+        <TextBlock Text="Behåll är förvalt: ingen extra hastighetsändring av resultatet. Avmarkera för att omvandla från filens nuvarande varvtal till målvarvtalet. Lokal mikrosynk fungerar som vanligt." FontSize="11" Opacity="0.58" TextWrapping="Wrap"/>
+        <StackPanel Orientation="Horizontal" Spacing="8"><Button Content="Look up record" Click="LookupRecord_Click"/><TextBlock Text="Identification aid only — not legal clearance." FontSize="11" Opacity="0.58" VerticalAlignment="Center"/></StackPanel>
+       </StackPanel>
+      </Expander>
+     </StackPanel>
+    </Grid></ScrollViewer>
+   </Border>
+   <Border Grid.Column="2" CornerRadius="12" Padding="18" Background="#FFFFFF">
+    <ScrollViewer x:Name="AnalysisScroll" BringIntoViewOnFocusChange="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><Grid Margin="0,0,20,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="210"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+     <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Analysis" FontSize="20" FontWeight="SemiBold"/><TextBlock Text="Confidence map — A repaired • B flagged/kept • C unchanged" Opacity="0.65" Margin="0,3,0,0"/></StackPanel><StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8"><Button Content="Load previous run" ToolTipService.ToolTip="Choose the run’s .decisions.csv first. If requested, choose its original restored Result WAV, then the original input recordings. Keep companion logs in the same folder." Click="LoadPreviousRun_Click"/><TextBlock Text="View:" VerticalAlignment="Center" Opacity="0.65"/><ComboBox x:Name="TimelineZoom" Width="105" Margin="0,2,0,0" VerticalAlignment="Center" SelectedIndex="1" SelectionChanged="TimelineZoom_SelectionChanged"><ComboBoxItem Content="5 s"/><ComboBoxItem Content="10 s"/><ComboBoxItem Content="30 s"/><ComboBoxItem Content="60 s"/><ComboBoxItem Content="Full"/></ComboBox><Button x:Name="OpenResultButton" Content="Open result" IsEnabled="False" Click="OpenResult_Click"/><Button x:Name="OpenMapButton" Content="Decision map" IsEnabled="False" Click="OpenMap_Click"/></StackPanel></Grid>
+     <Border Grid.Row="1" Margin="0,14" BorderThickness="1" CornerRadius="8" BorderBrush="#C7CDD4" Background="#FAFBFC"><Grid><ScrollViewer x:Name="TimelineScroll" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" HorizontalScrollMode="Enabled" ViewChanged="TimelineScroll_ViewChanged"><Canvas x:Name="DriftCanvas" Height="170" MinWidth="400" SizeChanged="DriftCanvas_SizeChanged" PointerPressed="DriftCanvas_PointerPressed"><Polyline x:Name="DriftLine" Stroke="#0067C0" StrokeThickness="2"/><Line x:Name="WaveformViewportLine" Tag="PersistentTimelineOverlay" Visibility="Collapsed" Stroke="#D43F00" StrokeThickness="5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" IsHitTestVisible="False"/></Canvas></ScrollViewer><StackPanel x:Name="NoAnalysisHint" HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False"><TextBlock Text="Source decision map" HorizontalAlignment="Center" Foreground="#555555"/><TextBlock Text="Click a repair to inspect aligned waveforms • orange line = aligned-waveform viewport • scroll sideways • time scale below" HorizontalAlignment="Center" Opacity="0.42" FontSize="12"/></StackPanel></Grid></Border>
+     <Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock x:Name="StatusText" Text="Ready" FontWeight="SemiBold" Foreground="#111111"/><TextBlock x:Name="DetailText" Text="No processing has been run." Foreground="#444444" FontSize="12" Margin="0,2,0,0"/><TextBlock x:Name="PositionText" Text="" Foreground="#0067C0" FontSize="12" FontWeight="SemiBold" Margin="0,3,0,0"/><TextBlock x:Name="HeartbeatText" Text="" Foreground="#64748B" FontSize="11" Margin="0,2,0,0"/>
+        <Expander Header="Technical details" Margin="0,6,0,0" HorizontalAlignment="Stretch"><ScrollViewer MaxHeight="130" VerticalScrollBarVisibility="Auto"><TextBlock x:Name="ProfileText" Text="" Foreground="#555555" FontSize="11" TextWrapping="Wrap"/></ScrollViewer></Expander></StackPanel><TextBlock Grid.Column="1" x:Name="ProgressText" Margin="12,0,8,0" Text="" VerticalAlignment="Center" FontSize="14" MaxWidth="460" TextWrapping="Wrap" FontWeight="SemiBold"/></Grid>
+     <Grid Grid.Row="3" Margin="0,12,0,0"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+      <Grid ColumnSpacing="12" RowSpacing="3">
+       <Grid.RowDefinitions><RowDefinition Height="32"/><RowDefinition Height="Auto"/><RowDefinition Height="44"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+       <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <TextBlock Text="Aligned waveforms" FontWeight="SemiBold" VerticalAlignment="Center"/>
+       <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="7" VerticalAlignment="Center">
+        <ToggleSwitch x:Name="RepairOverlayToggle" IsOn="True" OnContent="Overlay on" OffContent="Overlay off" Toggled="RepairOverlayToggle_Toggled" Height="32" VerticalAlignment="Center"/>
+        <ToggleSwitch x:Name="LevelMatchToggle" IsOn="True" OnContent="Matched level" OffContent="Raw level" Toggled="LevelMatchToggle_Toggled" Height="32" VerticalAlignment="Center"/>
+        <Button x:Name="PreviousRepairButton" Content="Previous repair" Click="PreviousRepair_Click" Height="32" VerticalAlignment="Center" IsEnabled="False"/>
+        <Button x:Name="NextRepairButton" Content="Next repair" Click="NextRepair_Click" Height="32" VerticalAlignment="Center" IsEnabled="False"/>
+        <TextBlock Text="Zoom:" VerticalAlignment="Center" Opacity="0.65"/>
+        <ComboBox x:Name="WaveformZoom" Width="105" Height="32" VerticalAlignment="Center" SelectedIndex="2" SelectionChanged="WaveformZoom_SelectionChanged"><ComboBoxItem Content="500 ms"/><ComboBoxItem Content="100 ms"/><ComboBoxItem Content="20 ms"/><ComboBoxItem Content="5 ms"/></ComboBox>
+       </StackPanel>
+       <TextBlock Grid.Row="1" Grid.ColumnSpan="2" x:Name="WaveformPositionText" Text="Wheel zooms at pointer • hold left button to shuttle • short click selects time" FontSize="12" Opacity="0.62" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+       <TextBlock Grid.Row="2" Grid.ColumnSpan="2" x:Name="WaveformOutputText" Height="40" MaxLines="2" TextTrimming="CharacterEllipsis" Text="Output at cursor: no result loaded" FontSize="12" FontWeight="SemiBold" Foreground="#415A78" Margin="0,3,0,0" TextWrapping="Wrap"/>
+       <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="7" Margin="0,7,0,0">
+        <Button x:Name="TrySourceButton" Content="Try source…" Click="TrySource_Click" IsEnabled="False"/>
+        <Button x:Name="ReviewFlaggedButton" Content="Review next B" Click="ReviewFlagged_Click" IsEnabled="False"/>
+        <Button x:Name="RevertRepairButton" Content="Undo repair → Master" Click="RevertRepair_Click" IsEnabled="False"/>
+        <Button x:Name="RestoreRepairButton" Content="Restore repair" Click="RestoreRepair_Click" IsEnabled="False"/>
+        <Button x:Name="SaveCorrectedButton" Content="Save user-corrected WAV" Click="SaveCorrected_Click" IsEnabled="False"/>
+       </StackPanel>
+       <StackPanel Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="7" Margin="0,5,0,0">
+        <Button x:Name="PlayMasterResultButton" Content="Listen Master 10 s" Click="PlayMasterCursor_Click" IsEnabled="False"/>
+        <Button x:Name="PlayResultCursorButton" Content="Listen Result 10 s" Click="PlayResultCursor_Click" IsEnabled="False"/>
+        <TextBlock x:Name="CorrectionStatusText" Text="" VerticalAlignment="Center" FontSize="11" Foreground="#5B6470" TextTrimming="CharacterEllipsis"/>
+       </StackPanel>
+      </Grid>
+      <Border Grid.Row="1" Margin="0,8,0,0" BorderThickness="1" CornerRadius="8" BorderBrush="#C7CDD4" Background="#FAFBFC">
+       <Grid>
+        <Grid.RowDefinitions><RowDefinition Height="120"/><RowDefinition Height="Auto"/><RowDefinition Height="142"/></Grid.RowDefinitions>
+        <!-- Keep one shared time width for Master, every donor and Result.
+             All lanes use their full height; the page owns vertical scrolling. -->
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/></Grid.ColumnDefinitions>
+        <Canvas x:Name="MasterWaveformCanvas" Grid.Row="0" Grid.Column="0" Background="Transparent" SizeChanged="WaveformCanvas_SizeChanged" PointerWheelChanged="WaveformCanvas_PointerWheelChanged" PointerPressed="WaveformCanvas_PointerPressed" PointerMoved="WaveformCanvas_PointerMoved" PointerReleased="WaveformCanvas_PointerReleased" PointerCaptureLost="WaveformCanvas_PointerCaptureLost"/>
+        <ScrollViewer x:Name="DonorWaveformScroll" Grid.Row="1" Grid.Column="0" VerticalScrollBarVisibility="Disabled" VerticalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" HorizontalScrollMode="Disabled" HorizontalContentAlignment="Stretch" ViewChanged="DonorWaveformScroll_ViewChanged">
+         <Canvas x:Name="DonorWaveformCanvas" Height="120" MinHeight="120" Background="Transparent" SizeChanged="WaveformCanvas_SizeChanged" PointerWheelChanged="WaveformCanvas_PointerWheelChanged" PointerPressed="WaveformCanvas_PointerPressed" PointerMoved="WaveformCanvas_PointerMoved" PointerReleased="WaveformCanvas_PointerReleased" PointerCaptureLost="WaveformCanvas_PointerCaptureLost"/>
+        </ScrollViewer>
+        <Border Grid.Row="1" Grid.Column="1" Visibility="Collapsed" Background="#EEF2F6" BorderBrush="#C7CDD4" BorderThickness="1,0,0,0">
+          <Grid Padding="7,5"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+           <Button x:Name="DonorUpButton" Content="▲" Height="34" HorizontalAlignment="Stretch" Click="DonorUp_Click" IsEnabled="False" ToolTipService.ToolTip="Visa föregående donator"/>
+           <StackPanel Grid.Row="1" VerticalAlignment="Center" Spacing="2">
+            <TextBlock Text="Donatorer" FontSize="10" HorizontalAlignment="Center" Opacity="0.65"/>
+            <TextBlock x:Name="DonorRangeText" Text="—" FontSize="11" FontWeight="SemiBold" TextAlignment="Center" TextWrapping="Wrap"/>
+           </StackPanel>
+           <Button x:Name="DonorDownButton" Grid.Row="2" Content="▼" Height="34" HorizontalAlignment="Stretch" Click="DonorDown_Click" IsEnabled="False" ToolTipService.ToolTip="Visa nästa donator"/>
+          </Grid>
+        </Border>
+        <Canvas x:Name="ResultWaveformCanvas" Grid.Row="2" Grid.Column="0" Background="Transparent" SizeChanged="WaveformCanvas_SizeChanged" PointerWheelChanged="WaveformCanvas_PointerWheelChanged" PointerPressed="WaveformCanvas_PointerPressed" PointerMoved="WaveformCanvas_PointerMoved" PointerReleased="WaveformCanvas_PointerReleased" PointerCaptureLost="WaveformCanvas_PointerCaptureLost"/>
+       </Grid>
+      </Border>
+     </Grid>
+     <StackPanel Grid.Row="4" Margin="0,16,0,0" Spacing="12">
+      <Expander Header="Optional start blanking" HorizontalAlignment="Stretch">
+       <StackPanel Spacing="8" Padding="0,8,0,8">
+        <TextBlock Text="Save a separate listening copy. Full level resumes at your boundary; the 20 ms fade is before it. Check the quiet pickup before saving." TextWrapping="Wrap"/>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+         <Button Content="Suggest from sources" Click="SuggestStartBlank_Click"/>
+         <NumberBox x:Name="StartBlankBoundary" Header="Full level from (result seconds)" Minimum="0.020" Maximum="10" Value="1.180" SmallChange="0.005" SpinButtonPlacementMode="Inline" Width="240"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Spacing="8">
+         <Button Content="Listen original start" Click="ListenStartOriginal_Click"/>
+         <Button Content="Preview blanked start" Click="PreviewStartBlank_Click"/>
+         <Button Content="Save blanked copy…" Click="SaveStartBlank_Click"/>
+        </StackPanel>
+        <TextBlock x:Name="StartBlankStatus" Text="Optional — no change until you preview or save." TextWrapping="Wrap"/>
+       </StackPanel>
+      </Expander>
+      <ProgressBar x:Name="AnalysisProgress" IsIndeterminate="False" Value="0"/>
+      <Border x:Name="RunSummaryPanel" Visibility="Collapsed" Padding="14,11" CornerRadius="8" BorderThickness="1" BorderBrush="#B9C7D6" Background="#F7FAFC">
+       <StackPanel Spacing="4">
+        <TextBlock Text="Restoration summary" FontWeight="SemiBold"/>
+        <TextBlock x:Name="RunSummaryHeadline" TextWrapping="Wrap" FontSize="13"/>
+        <TextBlock x:Name="RunSummaryDonors" TextWrapping="Wrap" FontSize="12" Foreground="#334155"/>
+        <TextBlock x:Name="RunSummaryFirstUse" TextWrapping="Wrap" FontSize="11" Foreground="#475569"/>
+        <TextBlock x:Name="RunSummaryNote" TextWrapping="Wrap" FontSize="11" Opacity="0.66"/>
+       </StackPanel>
+      </Border>
+      <InfoBar x:Name="ResultInfo" IsOpen="False" Severity="Success" Title="Restoration complete"/>
+      <Expander Header="What Master-2000 is doing"><TextBlock TextWrapping="Wrap" Opacity="0.72" Text="Choose Mono for lateral mono records, or Stereo to preserve left and right channels. Add three to six independent physical copies. Preflight finds the largest mutually syncable cluster and shows a measured source assessment before the Master is accepted. A Master needs at least two donors; recorded level is displayed separately and is not treated as quality. Up to four donors form the active core; a sixth viable copy is a sparse reserve, while unrelated copies are rejected before expensive analysis. The two strongest donors establish the early backward sync; each additional donor may follow only when both established donors confirm every step. Repair votes compare locally level-matched sources and require a strict majority. The 2 ms vote remains intact, but an isolated impulse may be rendered as a smaller sample-localized core with a smooth S-fade. A failed postcheck retries fractional-sample local phase, a longer splice and another independently supporting donor; every retry passes the same safety gates. B areas remain Master and can be reviewed. Accepted A repairs can be undone back to the exact Master-only WAV and saved as a separate user-corrected copy. Matched level changes only the graph and Raw level shows the recorded amplitudes. Master, all other sources and Result have full-height lanes in one vertically scrollable page. All curves share a peak scale with 15% vertical headroom. Stereo repairs use a shared time map and donor for both channels. Public Beta: assess repairs by listening; stereo restoration needs further validation."/></Expander>
+     </StackPanel>
+    </Grid></ScrollViewer>
+   </Border>
+  </Grid>
+  <Border Grid.Row="2" Padding="24,12,24,18"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock Text="Local processing only • Lossless import • PCM WAV result • No cloud • No generated replacement audio" VerticalAlignment="Center" Opacity="0.55"/><TextBlock Text="© 2000–2026 Olaf Hallberg · Master-2000" FontSize="11" Opacity="0.42" Margin="0,3,0,0"/></StackPanel><StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10"><Button Content="Help / tutorial" Click="Help_Click"/><Button Content="License" Click="License_Click"/><Button Content="About" Click="About_Click"/><Button x:Name="CancelButton" Content="Cancel" IsEnabled="False" Click="Cancel_Click"/><Button x:Name="AnalyzeButton" Content="1. Check sync..."  IsEnabled="False" Click="Analyze_Click"/></StackPanel></Grid></Border>
+ </Grid>
+</Window>

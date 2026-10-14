@@ -1,0 +1,4 @@
+Mono-78 v1.1a har engelskt gränssnitt. Se README.txt.
+Bygg med BUILD.cmd. EXE finns i bin/Release/Mono-78.exe.
+Testa varvtalsval och konvertering; skicka godkänd EXE som ZIP.
+Ingen ändring av ljudmotorn.
